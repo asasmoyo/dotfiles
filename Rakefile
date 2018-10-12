@@ -97,8 +97,8 @@ desc 'Setup work stuff'
 task :work do
   ["postgresql@#{VERSIONS['postgres']}", 'redis'].each do |pkg|
     sh "brew install #{pkg}"
+    sh "brew services start #{pkg}"
   end
-  sh 'brew services list'
 
   # configure postgres
   pg_data = "#{ENV['HOME']}/.homebrew/var/postgresql@#{VERSIONS['postgres']}"
