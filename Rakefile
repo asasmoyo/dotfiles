@@ -78,7 +78,7 @@ task :packages do
   ['java8', 'visual-studio-code', 'dbeaver-community', 'sublime-text', 'google-chrome', 'google-backup-and-sync', 'spectacle', 'iterm2'].each do |cask|
     sh "brew cask install --appdir=\"~/Applications\" #{cask}"
   end
-  sh '[ ! -d /Applications/Tunnelblick.app ] && brew cask install tunnelblick && chown -R root /Applications/Tunnelblick.app'
+  sh '[ ! -d /Applications/Tunnelblick.app ] && brew cask install tunnelblick && sudo chown -R root /Applications/Tunnelblick.app'
 
   pips = [
     'chkcrontab'
