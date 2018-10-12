@@ -75,10 +75,10 @@ task :packages do
   end
 
   # casks
-  ['java8', 'visual-studio-code', 'dbeaver-community', 'sublime-text', 'google-chrome', 'google-backup-and-sync', 'spectacle'].each do |cask|
+  ['java8', 'visual-studio-code', 'dbeaver-community', 'sublime-text', 'google-chrome', 'google-backup-and-sync', 'spectacle', 'iterm2'].each do |cask|
     sh "brew cask install --appdir=\"~/Applications\" #{cask}"
   end
-  sh 'brew cask install tunnelblick'
+  sh '[ ! -d /Applications/Tunnelblick.app ] && brew cask install tunnelblick && chown -R root /Applications/Tunnelblick.app'
 
   pips = [
     'chkcrontab'
