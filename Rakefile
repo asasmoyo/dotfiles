@@ -79,23 +79,8 @@ task :packages do
   ['java8', 'visual-studio-code', 'dbeaver-community', 'sublime-text', 'google-chrome', 'google-backup-and-sync', 'spectacle', 'iterm2'].each do |cask|
     sh "brew cask install --appdir=\"~/Applications\" #{cask}"
   end
-  sh <<~CMD
-    if [ ! -d /Applications/Tunnelblick.app ]; then
-      brew cask install tunnelblick
-      sudo chown -R root /Applications/Tunnelblick.app
-    fi
-  CMD
-  # install scroll reverser from github release
-  scroll_reverser_url = 'https://github.com/pilotmoon/Scroll-Reverser/releases/download/1.7.6/ScrollReverser-1.7.6.zip'
-  Dir.chdir('/tmp') do
-    sh <<~CMD
-      if [ ! -d ~/Applications/Scroll\\ Reverser.app ]; then
-        wget #{scroll_reverser_url} -O scroll-reverser.zip
-        unzip scroll-reverser.zip
-        mv Scroll\\ Reverser.app ~/Applications
-      fi
-    CMD
-  end
+  sh '[ -d /Applications/Tunnelblick.app ] || brew cask install tunnelblick && sudo chown -R root /Applications/Tunnelblick.app'
+  sh '[ -d /Applications/Docker.app ] || brew cask install docker && sudo chown -R root /Applications/Docker.app'
 
   pips = [
     'chkcrontab'
@@ -107,7 +92,9 @@ task :packages do
   # configure go and ruby
   sh <<~CMD
     goenv install --keep --skip-existing --verbose #{VERSIONS['go']}
+    goenv global #{VERSIONS['go']}
     rbenv install --keep --skip-existing --verbose #{VERSIONS['ruby']}
+    rbenv global #{VERSIONS['ruby']}
   CMD
 end
 
@@ -139,7 +126,7 @@ task :work do
     lc_messages = 'en_US.UTF-8'                     # locale for system error message
     lc_monetary = 'en_US.UTF-8'                     # locale for monetary formatting
     lc_numeric = 'en_US.UTF-8'                      # locale for number formatting
-    lc_time = 'en_US.UTF-8'                         # locale for time formatting 
+    lc_time = 'en_US.UTF-8'                         # locale for time formatting
   EOF
   File.write("#{pg_data}/conf.d/work.conf", work_conf)
   sh "brew services restart postgresql@#{VERSIONS['postgres']}"
