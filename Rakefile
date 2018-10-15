@@ -69,6 +69,7 @@ task :packages do
     'make',
     'python',
     'tree',
+    'packer',
   ]
   pkgs.each do |pkg|
     sh "brew install #{pkg}"
