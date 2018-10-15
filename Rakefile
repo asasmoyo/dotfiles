@@ -131,5 +131,16 @@ task :work do
     mkdir -p #{pg_data}/conf.d && chmod -R 700 #{pg_data}/conf.d
     grep -q "include_dir = 'conf.d'" #{pg_conf_file} || echo "include_dir = 'conf.d'" >> #{pg_conf_file}
   EOF
+  work_conf = <<~EOF
+    bytea_output = 'escape'
+    datestyle = 'iso, mdy'
+    default_text_search_config = 'pg_catalog.english'
+    timezone = 'UTC'
+    lc_messages = 'en_US.UTF-8'                     # locale for system error message
+    lc_monetary = 'en_US.UTF-8'                     # locale for monetary formatting
+    lc_numeric = 'en_US.UTF-8'                      # locale for number formatting
+    lc_time = 'en_US.UTF-8'                         # locale for time formatting 
+  EOF
+  File.write("#{pg_data}/conf.d/work.conf", work_conf)
   sh "brew services restart postgresql@#{VERSIONS['postgres']}"
 end
