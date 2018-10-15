@@ -78,7 +78,23 @@ task :packages do
   ['java8', 'visual-studio-code', 'dbeaver-community', 'sublime-text', 'google-chrome', 'google-backup-and-sync', 'spectacle', 'iterm2'].each do |cask|
     sh "brew cask install --appdir=\"~/Applications\" #{cask}"
   end
-  sh '[ ! -d /Applications/Tunnelblick.app ] && brew cask install tunnelblick && sudo chown -R root /Applications/Tunnelblick.app'
+  sh <<~CMD
+    if [ ! -d /Applications/Tunnelblick.app ]; then
+      brew cask install tunnelblick
+      sudo chown -R root /Applications/Tunnelblick.app
+    fi
+  CMD
+  # install scroll reverser from github release
+  scroll_reverser_url = 'https://github.com/pilotmoon/Scroll-Reverser/releases/download/1.7.6/ScrollReverser-1.7.6.zip'
+  Dir.chdir('/tmp') do
+    sh <<~CMD
+      if [ ! -d ~/Applications/Scroll\\ Reverser.app ]; then
+        wget #{scroll_reverser_url} -O scroll-reverser.zip
+        unzip scroll-reverser.zip
+        mv Scroll\\ Reverser.app ~/Applications
+      fi
+    CMD
+  end
 
   pips = [
     'chkcrontab'
