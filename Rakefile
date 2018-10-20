@@ -3,6 +3,7 @@ require_relative 'lib.rb'
 VERSIONS = {
   'ruby' => '2.5.1',
   'go' => '1.11.1',
+  'node' => '8.2.0',
   'postgres' => '9.6',
 }
 
@@ -56,6 +57,7 @@ task :packages do
   pkgs = [
     'rbenv',
     'goenv',
+    'nodenv',
     'coreutils',
     'findutils',
     'binutils',
@@ -67,9 +69,10 @@ task :packages do
     'less',
     'jq',
     'make',
+    'zlib', # needed for python2
+    'python2',
     'python',
     'tree',
-    'packer',
   ]
   pkgs.each do |pkg|
     sh "brew install #{pkg}"
@@ -79,14 +82,35 @@ task :packages do
   ['java8', 'visual-studio-code', 'dbeaver-community', 'sublime-text', 'google-chrome', 'google-backup-and-sync', 'spectacle', 'iterm2'].each do |cask|
     sh "brew cask install --appdir=\"~/Applications\" #{cask}"
   end
-  sh '[ -d /Applications/Tunnelblick.app ] || brew cask install tunnelblick && sudo chown -R root /Applications/Tunnelblick.app'
-  sh '[ -d /Applications/Docker.app ] || brew cask install docker && sudo chown -R root /Applications/Docker.app'
+  sh <<~CMD
+    if [ ! -d ~/Applications/Docker.app ]; then
+      brew cask install docker
+      sudo chown -R root ~/Applications/Docker.app
+    fi
+  CMD
+  sh <<~CMD
+    if [ ! -d /Applications/Tunnelblick.app ]; then
+      brew cask install tunnelblick
+      sudo chown -R root /Applications/Tunnelblick.app
+    fi
+  CMD
+  # install scroll reverser from github release
+  scroll_reverser_url = 'https://github.com/pilotmoon/Scroll-Reverser/releases/download/1.7.6/ScrollReverser-1.7.6.zip'
+  Dir.chdir('/tmp') do
+    sh <<~CMD
+      if [ ! -d ~/Applications/Scroll\\ Reverser.app ]; then
+        wget #{scroll_reverser_url} -O scroll-reverser.zip
+        unzip scroll-reverser.zip
+        mv Scroll\\ Reverser.app ~/Applications
+      fi
+    CMD
+  end
 
   pips = [
     'chkcrontab'
   ]
   pips.each do |pip|
-    sh "pip install --user #{pip}"
+    sh "pip3 install --user #{pip}"
   end
 
   # configure go and ruby
@@ -95,11 +119,15 @@ task :packages do
     goenv global #{VERSIONS['go']}
     rbenv install --keep --skip-existing --verbose #{VERSIONS['ruby']}
     rbenv global #{VERSIONS['ruby']}
+    nodenv install --keep --skip-existing --verbose #{VERSIONS['node']}
+    nodenv global #{VERSIONS['node']}
   CMD
 end
 
 desc 'Setup work stuff'
 task :work do
+  sh 'brew install packer'
+
   ["postgresql@#{VERSIONS['postgres']}", 'redis'].each do |pkg|
     sh "brew install #{pkg}"
     sh "brew services start #{pkg}"
