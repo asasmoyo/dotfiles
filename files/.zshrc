@@ -107,7 +107,9 @@ eval "$(rbenv init -)"
 eval "$(nodenv init -)"
 
 # python --user binaries
-export PATH=$PATH:~/Library/Python/3.7/bin
+export PATH=~/Library/Python/3.7/bin:$PATH
 
-source ~/.workrc
-# source ~/.gnu_profile
+# load more configs
+for f in $(ls ~/more.d/*_profile); do
+    source $f
+done

@@ -1,7 +1,7 @@
 require_relative 'lib.rb'
 
 VERSIONS = {
-  'ruby' => '2.5.1',
+  'ruby' => '2.5.3',
   'go' => '1.11.1',
   'node' => '8.2.0',
   'postgres' => '9.6',
@@ -22,23 +22,32 @@ task :base do
     brew update
     brew analytics off
     brew install zsh
+    mkdir -p ~/more.d
   CMD
   puts "you'll need to run 'chsh -s $(which zsh)' to make zsh as your default shell"
 end
 
 desc 'Installed tracked files'
 task :scripts do
+  # ~/
   [
     '.zshrc',
-    '.brew_profile',
-    '.workrc',
     '.global_gitignore',
-    '.gnu_profile',
+    '.brew_profile',
   ].each do |file|
     sh <<~CMD
       rm -f ~/#{file} && cp ./files/#{file} ~/
     CMD
   end
+
+  # ~/more.d
+  sh 'rm -f ~/more.d/.work_profile && cp ./files/.work_profile ~/more.d/'
+  openssl_bin = %x( brew --prefix openssl ).strip
+  gnu_profile = <<~EOF
+    export PATH=#{openssl_bin}/bin:$PATH
+  EOF
+  File.write("#{ENV['HOME']}/more.d/gnu_profile", gnu_profile)
+
   render_tpl 'files/.gitconfig.erb', "#{ENV['HOME']}/.gitconfig"
 end
 
@@ -73,6 +82,7 @@ task :packages do
     'python2',
     'python',
     'tree',
+    'libsodium',
   ]
   pkgs.each do |pkg|
     sh "brew install #{pkg}"
@@ -106,14 +116,6 @@ task :packages do
     CMD
   end
 
-  pips = [
-    'chkcrontab'
-  ]
-  pips.each do |pip|
-    sh "pip3 install --user #{pip}"
-  end
-
-  # configure go and ruby
   sh <<~CMD
     goenv install --keep --skip-existing --verbose #{VERSIONS['go']}
     goenv global #{VERSIONS['go']}
@@ -126,6 +128,13 @@ end
 
 desc 'Setup work stuff'
 task :work do
+  pips = [
+    'chkcrontab'
+  ]
+  pips.each do |pip|
+    sh "pip3 install --user #{pip}"
+  end
+
   sh 'brew install packer'
 
   ["postgresql@#{VERSIONS['postgres']}", 'redis'].each do |pkg|
@@ -158,4 +167,9 @@ task :work do
   EOF
   File.write("#{pg_data}/conf.d/work.conf", work_conf)
   sh "brew services restart postgresql@#{VERSIONS['postgres']}"
+  pg_bin_path = %x( brew --prefix postgresql@#{VERSIONS['postgres']} ).strip
+  pg_path_env = <<~EOF
+    export PATH=#{pg_bin_path}/bin:$PATH
+  EOF
+  File.write("#{ENV['HOME']}/more.d/postgres_profile", pg_path_env)
 end
