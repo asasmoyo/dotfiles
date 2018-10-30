@@ -23,6 +23,9 @@ task :base do
     brew analytics off
     brew install zsh
     mkdir -p ~/more.d
+    sudo mkdir -p /usr/local/lib
+    sudo chown -R root:wheel /usr/local/lib
+    sudo chmod -R 755 /usr/local/lib
   CMD
   puts "you'll need to run 'chsh -s $(which zsh)' to make zsh as your default shell"
 end
@@ -88,6 +91,12 @@ task :packages do
   pkgs.each do |pkg|
     sh "brew install #{pkg}"
   end
+
+  # link libsodium
+  libsodium_dir = %x( brew --prefix libsodium ).strip
+  sh <<~EOF
+    sudo ln -sf #{libsodium_dir}/lib/libsodium.dylib /usr/local/lib/libsodium.dylib
+  EOF
 
   # casks
   ['java8', 'visual-studio-code', 'dbeaver-community', 'sublime-text', 'google-chrome', 'google-backup-and-sync', 'spectacle', 'iterm2'].each do |cask|
