@@ -44,7 +44,7 @@ task :scripts do
   end
 
   # ~/more.d
-  sh 'rm -f ~/more.d/.work_profile && cp ./files/.work_profile ~/more.d/'
+  sh 'rm -f ~/more.d/work_profile && cp ./files/work_profile ~/more.d/'
   openssl_bin = %x( brew --prefix openssl ).strip
   grep_bin = %x( brew --prefix grep ).strip
   gnu_profile = <<~EOF
