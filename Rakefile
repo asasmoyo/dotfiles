@@ -87,6 +87,7 @@ task :packages do
     'python',
     'tree',
     'libsodium',
+    'nvim',
   ]
   pkgs.each do |pkg|
     sh "brew install #{pkg}"
@@ -133,6 +134,13 @@ task :packages do
     rbenv global #{VERSIONS['ruby']}
     nodenv install --keep --skip-existing --verbose #{VERSIONS['node']}
     nodenv global #{VERSIONS['node']}
+  CMD
+
+  # for vscode extensions
+  sh <<~CMD
+    gem list | grep rubocop || gem install rubocop
+    gem list | grep rcodetools || gem install rcodetools
+    gem list | grep fastri || gem install fastri
   CMD
 end
 
