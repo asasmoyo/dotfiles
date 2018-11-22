@@ -100,7 +100,7 @@ task :packages do
   EOF
 
   # casks
-  ['java8', 'visual-studio-code', 'dbeaver-community', 'sublime-text', 'google-chrome', 'google-backup-and-sync', 'spectacle', 'iterm2'].each do |cask|
+  ['java8', 'visual-studio-code-insiders', 'dbeaver-community', 'sublime-text', 'google-chrome', 'google-backup-and-sync', 'spectacle', 'iterm2'].each do |cask|
     sh "brew cask install --appdir=\"~/Applications\" #{cask}"
   end
   sh <<~CMD
@@ -142,6 +142,9 @@ task :packages do
     gem list | grep rcodetools || gem install rcodetools
     gem list | grep fastri || gem install fastri
   CMD
+
+  # needed for vscode vim for key repeating
+  sh 'defaults write com.microsoft.VSCodeInsiders ApplePressAndHoldEnabled -bool false'
 end
 
 desc 'Setup work stuff'
