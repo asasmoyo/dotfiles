@@ -73,7 +73,6 @@ task :packages do
     'nodenv',
     'coreutils',
     'findutils',
-    'binutils',
     'diffutils',
     'wget',
     'gzip',
@@ -82,9 +81,6 @@ task :packages do
     'less',
     'jq',
     'make',
-    'zlib', # needed for python2
-    'python2',
-    'python',
     'tree',
     'libsodium',
     'nvim',
