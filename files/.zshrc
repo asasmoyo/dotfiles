@@ -107,7 +107,7 @@ eval "$(rbenv init -)"
 eval "$(nodenv init -)"
 
 # python --user binaries
-export PATH=~/Library/Python/3.7/bin:$PATH
+export PATH=~/Library/Python/2.7/bin:$PATH
 
 # load more configs
 for f in $(ls ~/more.d/*_profile); do
