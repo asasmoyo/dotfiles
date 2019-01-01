@@ -19,8 +19,23 @@ task :config do
       rm -f ~/#{file} && cp ./files/#{file} ~/
     CMD
   end
+  sh 'mkdir -p ~/.more'
   sh 'rm -f ~/.more/work_profile && cp ./files/work_profile ~/.more/'
   render_tpl 'files/.gitconfig.erb', "#{ENV['HOME']}/.gitconfig"
+end
+
+task :common do
+  sh '[ -d ~/.oh-my-zsh ] || sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"'
+  puts "you'll need to run 'chsh -s $(which zsh)' to make zsh as your default shell"
+
+  sh <<~CMD
+    goenv install --keep --skip-existing --verbose #{VERSIONS['go']}
+    goenv global #{VERSIONS['go']}
+    rbenv install --keep --skip-existing --verbose #{VERSIONS['ruby']}
+    rbenv global #{VERSIONS['ruby']}
+    nodenv install --keep --skip-existing --verbose #{VERSIONS['node']}
+    nodenv global #{VERSIONS['node']}
+  CMD
 end
 
 task :run do
@@ -28,13 +43,10 @@ task :run do
 
   sh <<~CMD
     [ -d /usr/local/Homebrew ] || /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
-    [ -d ~/.oh-my-zsh ] || sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
     brew update
     brew analytics off
     brew install zsh
-    mkdir -p ~/.more
   CMD
-  puts "you'll need to run 'chsh -s $(which zsh)' to make zsh as your default shell"
 
   # install packages
   sh 'brew update'
@@ -96,18 +108,4 @@ task :run do
       fi
     CMD
   end
-
-  ['rbenv', 'goenv', 'nodenv'].each do |item|
-    sh "sudo mkdir -p /opt/#{item}"
-    sh "sudo chown #{user} /opt/#{item}"
-  end
-
-  sh <<~CMD
-    goenv install --keep --skip-existing --verbose #{VERSIONS['go']}
-    goenv global #{VERSIONS['go']}
-    rbenv install --keep --skip-existing --verbose #{VERSIONS['ruby']}
-    rbenv global #{VERSIONS['ruby']}
-    nodenv install --keep --skip-existing --verbose #{VERSIONS['node']}
-    nodenv global #{VERSIONS['node']}
-  CMD
 end
