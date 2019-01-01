@@ -1,5 +1,7 @@
 require_relative 'lib.rb'
 
+user = 'personal'
+
 VERSIONS = {
   'ruby' => '2.6.0',
   'go' => '1.11.4',
@@ -8,8 +10,7 @@ VERSIONS = {
   'postgres-cli' => '11',
 }
 
-task :run do
-  # install config files
+task :config do
   [
     '.zshrc',
     '.global_gitignore',
@@ -18,8 +19,11 @@ task :run do
       rm -f ~/#{file} && cp ./files/#{file} ~/
     CMD
   end
+  sh 'rm -f ~/.more/work_profile && cp ./files/work_profile ~/.more/'
   render_tpl 'files/.gitconfig.erb', "#{ENV['HOME']}/.gitconfig"
+end
 
+task :run do
   sh 'xcode-select -p || xcode-select --install'
 
   sh <<~CMD
@@ -31,9 +35,6 @@ task :run do
     mkdir -p ~/.more
   CMD
   puts "you'll need to run 'chsh -s $(which zsh)' to make zsh as your default shell"
-
-  # more config files
-  sh 'rm -f ~/.more/work_profile && cp ./files/work_profile ~/.more/'
 
   # install packages
   sh 'brew update'
@@ -61,6 +62,7 @@ task :run do
     'nvim',
     'postgresql@9.6',
     'postgresql@11',
+    'php', # :(
   ]
   pkgs.each do |pkg|
     sh "brew install #{pkg}"
@@ -78,7 +80,7 @@ task :run do
     'iterm2',
     'docker',
     'tunnelblick',
-    'sourcetree'
+    'sourcetree',
   ].each do |cask|
     sh "brew cask install #{cask}"
   end
@@ -95,15 +97,17 @@ task :run do
     CMD
   end
 
-  # sh <<~CMD
-  #   goenv install --keep --skip-existing --verbose #{VERSIONS['go']}
-  #   goenv global #{VERSIONS['go']}
-  #   rbenv install --keep --skip-existing --verbose #{VERSIONS['ruby']}
-  #   rbenv global #{VERSIONS['ruby']}
-  #   nodenv install --keep --skip-existing --verbose #{VERSIONS['node']}
-  #   nodenv global #{VERSIONS['node']}
-  # CMD
+  ['rbenv', 'goenv', 'nodenv'].each do |item|
+    sh "sudo mkdir -p /opt/#{item}"
+    sh "sudo chown #{user} /opt/#{item}"
+  end
 
-  # # needed for vscode vim for key repeating
-  # sh 'defaults write com.microsoft.VSCodeInsiders ApplePressAndHoldEnabled -bool false'
+  sh <<~CMD
+    goenv install --keep --skip-existing --verbose #{VERSIONS['go']}
+    goenv global #{VERSIONS['go']}
+    rbenv install --keep --skip-existing --verbose #{VERSIONS['ruby']}
+    rbenv global #{VERSIONS['ruby']}
+    nodenv install --keep --skip-existing --verbose #{VERSIONS['node']}
+    nodenv global #{VERSIONS['node']}
+  CMD
 end

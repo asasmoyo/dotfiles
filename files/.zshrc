@@ -93,13 +93,16 @@ alias vi=nvim
 export EDITOR='vim'
 
 # go
+export GOENV_ROOT=/opt/goenv
 eval "$(goenv init -)"
 export PATH=~/go/bin:$PATH
 
 # ruby
+export RBENV_ROOT=/opt/rbenv
 eval "$(rbenv init -)"
 
 # node
+export NODENV_ROOT=/opt/nodenv
 eval "$(nodenv init -)"
 
 # python --user binaries
