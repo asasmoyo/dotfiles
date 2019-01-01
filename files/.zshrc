@@ -88,13 +88,9 @@ ZSH_DISABLE_COMPFIX=true source $ZSH/oh-my-zsh.sh
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 
-# there's error on neovim brew package
-# alias vim=nvim
-# alias vi=nvim
+alias vim=nvim
+alias vi=nvim
 export EDITOR='vim'
-
-# load brew stuff first
-source ~/.brew_profile
 
 # go
 eval "$(goenv init -)"
@@ -110,6 +106,6 @@ eval "$(nodenv init -)"
 export PATH=~/Library/Python/2.7/bin:$PATH
 
 # load more configs
-for f in $(ls ~/more.d/*_profile); do
+for f in $(ls ~/.more/*_profile); do
     source $f
 done
