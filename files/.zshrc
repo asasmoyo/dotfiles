@@ -88,6 +88,10 @@ ZSH_DISABLE_COMPFIX=true source $ZSH/oh-my-zsh.sh
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 
+# disable globbing
+# https://github.com/robbyrussell/oh-my-zsh/issues/433#issuecomment-434813442
+unsetopt nomatch
+
 alias vim=nvim
 alias vi=nvim
 export EDITOR='vim'
