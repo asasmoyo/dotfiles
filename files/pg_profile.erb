@@ -10,10 +10,10 @@ function _pg96_init {
     local more_conf="${BASE_PGDATA}/conf.d"
     mkdir -p ${more_conf}
 
-    cat << EOF > "${more_conf}/pg_hba.conf"
-local all all trust
-host all all 127.0.0.0/32 trust
-host all all ::1/128 trust
+    cat << EOF > "${more_conf}/me.conf"
+listen_addresses = '127.0.0.1'
+log_statement = 'all'
+log_line_prefix = '%m [%p] '
 EOF
 
     local conf="${PGDATA_96}/postgresql.conf"
