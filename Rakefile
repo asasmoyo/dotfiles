@@ -9,6 +9,7 @@ task :configfiles do
   end
 
   sh 'mkdir -p ~/.more'
+  sh 'rm -f ~/.more/pg_profile && cp ./files/pg_profile ~/.more/'
   render_tpl 'files/gnu_profile.erb', "#{ENV['HOME']}/.more/gnu_profile"
   render_tpl 'files/.gitconfig.erb', "#{ENV['HOME']}/.gitconfig"
 end
@@ -109,7 +110,7 @@ task :install do
 end
 
 task :work do
-  sh "rm -f ~/.more/work_profile && cp ./files/work_profile ~/.more/"
+  sh 'rm -f ~/.more/work_profile && cp ./files/work_profile ~/.more/'
 
   Rake::Task['langenv'].execute
   Rake::Task['configfiles'].execute
