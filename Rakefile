@@ -1,61 +1,54 @@
 require_relative 'lib.rb'
 
-user = 'personal'
-
-VERSIONS = {
-  'ruby' => '2.6.0',
-  'go' => '1.11.4',
-  'node' => '10.15.0',
-  'postgres' => '9.6',
-  'postgres-cli' => '11',
-}
-
-task :config do
+task :configfiles do
   [
     '.zshrc',
     '.global_gitignore',
   ].each do |file|
-    sh <<~CMD
-      rm -f ~/#{file} && cp ./files/#{file} ~/
-    CMD
+    sh "rm -f ~/#{file} && cp ./files/#{file} ~/"
   end
+
   sh 'mkdir -p ~/.more'
-  sh 'rm -f ~/.more/work_profile && cp ./files/work_profile ~/.more/'
+  render_tpl 'files/gnu_profile.erb', "#{ENV['HOME']}/.more/gnu_profile"
   render_tpl 'files/.gitconfig.erb', "#{ENV['HOME']}/.gitconfig"
 end
 
-task :common do
-  sh '[ -d ~/.oh-my-zsh ] || sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"'
-  puts "you'll need to run 'chsh -s $(which zsh)' to make zsh as your default shell"
+task :langenv do
+  go_version = '1.11.4'
+  ruby_version = '2.6.0'
+  node_version = '10.15.0'
 
   sh <<~CMD
-    goenv install --keep --skip-existing --verbose #{VERSIONS['go']}
-    goenv global #{VERSIONS['go']}
-    rbenv install --keep --skip-existing --verbose #{VERSIONS['ruby']}
-    rbenv global #{VERSIONS['ruby']}
-    nodenv install --keep --skip-existing --verbose #{VERSIONS['node']}
-    nodenv global #{VERSIONS['node']}
+    goenv install --keep --skip-existing --verbose #{go_version}
+    goenv global #{go_version}
+
+    rbenv install --keep --skip-existing --verbose #{ruby_version}
+    rbenv global #{ruby_version}
+
+    nodenv install --keep --skip-existing --verbose #{node_version}
+    nodenv global #{node_version}
   CMD
 end
 
-task :run do
+task :install do
+  # xcode
   sh 'xcode-select -p || xcode-select --install'
 
+  # brew
   sh <<~CMD
     [ -d /usr/local/Homebrew ] || /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
     brew update
     brew analytics off
-    brew install zsh
   CMD
 
-  # install packages
-  sh 'brew update'
-  taps = ['caskroom/versions']
-  taps.each do |tap|
-    sh "brew tap #{tap}"
-  end
+  # zsh
+  sh 'brew install zsh'
+  sh '[ -d ~/.oh-my-zsh ] || sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"'
+  sh 'grep -i $(brew --prefix zsh)/bin/zsh /etc/shells || echo $(brew --prefix zsh)/bin/zsh | sudo tee -a /etc/shells'
+  sh 'chsh -s $(which zsh) $USER'
 
-  pkgs = [
+  # some packages
+  [
     'rbenv',
     'goenv',
     'nodenv',
@@ -72,15 +65,14 @@ task :run do
     'tree',
     'libsodium',
     'nvim',
+    'openssl',
     'postgresql@9.6',
-    'postgresql@11',
-    'php', # :(
-  ]
-  pkgs.each do |pkg|
+    'postgresql@11', # latest version for cli
+  ].each do |pkg|
     sh "brew install #{pkg}"
   end
 
-  # casks
+  # more packages
   [
     'java8',
     'visual-studio-code-insiders',
@@ -93,19 +85,32 @@ task :run do
     'docker',
     'tunnelblick',
     'sourcetree',
-  ].each do |cask|
-    sh "brew cask install #{cask}"
+  ].each do |pkg|
+    sh "brew cask install #{pkg}"
   end
 
-  # install scroll reverser from github release
+  # scroll reverser
   scroll_reverser_url = 'https://github.com/pilotmoon/Scroll-Reverser/releases/download/1.7.6/ScrollReverser-1.7.6.zip'
   Dir.chdir('/tmp') do
     sh <<~CMD
       if [ ! -d /Applications/Scroll\\ Reverser.app ]; then
         wget #{scroll_reverser_url} -O scroll-reverser.zip
         unzip scroll-reverser.zip
-        mv Scroll\\ Reverser.app ~/Applications
+        mv Scroll\\ Reverser.app /Applications
       fi
     CMD
   end
+
+  Rake::Task['langenv'].execute
+  Rake::Task['configfiles'].execute
+
+  puts "Now you'll need to restart your shell"
+end
+
+task :work do
+  sh "rm -f ~/.more/work_profile && cp ./files/work_profile ~/.more/"
+
+  Rake::Task['langenv'].execute
+  Rake::Task['configfiles'].execute
+  puts "Now you'll need to restart your shell"
 end
