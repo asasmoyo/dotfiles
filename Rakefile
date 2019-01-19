@@ -68,6 +68,7 @@ task :install do
     'openssl',
     'postgresql@9.6',
     'postgresql@11', # latest version for cli
+    'homebrew/cask-drivers/logitech-options',
   ].each do |pkg|
     sh "brew install #{pkg}"
   end
