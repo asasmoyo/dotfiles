@@ -9,7 +9,7 @@ task :configfiles do
   end
 
   sh 'mkdir -p ~/.more'
-  sh 'rm -f ~/.more/pg_profile && cp ./files/pg_profile ~/.more/'
+  render_tpl 'files/pg_profile.erb', "#{ENV['HOME']}/.more/pg_profile"
   render_tpl 'files/gnu_profile.erb', "#{ENV['HOME']}/.more/gnu_profile"
   render_tpl 'files/.gitconfig.erb', "#{ENV['HOME']}/.gitconfig"
 end
@@ -87,6 +87,8 @@ task :install do
     'docker',
     'tunnelblick',
     'sourcetree',
+    'google-cloud-sdk',
+    'vagrant',
   ].each do |pkg|
     sh "brew cask install #{pkg}"
   end
