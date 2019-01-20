@@ -29,6 +29,9 @@ task :langenv do
     nodenv install --keep --skip-existing --verbose #{node_version}
     nodenv global #{node_version}
   CMD
+
+  # python virtualenv
+  sh '$(brew --prefix python3)/bin/pip3 install virtualenvwrapper'
 end
 
 task :install do
@@ -53,6 +56,7 @@ task :install do
     'rbenv',
     'goenv',
     'nodenv',
+    'python3',
     'coreutils',
     'findutils',
     'diffutils',
@@ -91,18 +95,6 @@ task :install do
     'vagrant',
   ].each do |pkg|
     sh "brew cask install #{pkg}"
-  end
-
-  # scroll reverser
-  scroll_reverser_url = 'https://github.com/pilotmoon/Scroll-Reverser/releases/download/1.7.6/ScrollReverser-1.7.6.zip'
-  Dir.chdir('/tmp') do
-    sh <<~CMD
-      if [ ! -d /Applications/Scroll\\ Reverser.app ]; then
-        wget #{scroll_reverser_url} -O scroll-reverser.zip
-        unzip scroll-reverser.zip
-        mv Scroll\\ Reverser.app /Applications
-      fi
-    CMD
   end
 
   Rake::Task['langenv'].execute

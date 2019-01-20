@@ -109,6 +109,10 @@ eval "$(nodenv init -)"
 # python --user binaries
 export PATH=~/Library/Python/2.7/bin:$PATH
 
+# python virtualenv
+export WORKON_HOME=~/.pyenv
+source /usr/local/bin/virtualenvwrapper.sh
+
 # load more configs
 for f in $(ls ~/.more/*_profile); do
     source $f
