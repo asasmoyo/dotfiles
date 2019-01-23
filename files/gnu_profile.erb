@@ -1,1 +1,1 @@
-export PATH=<%= `echo $(brew --prefix coreutils)/libexec/gnubin`.strip %>:<%= `echo $(brew --prefix findutils)/libexec/gnubin`.strip %>:<%= `echo $(brew --prefix diffutils)/bin`.strip %>:<%= `echo $(brew --prefix openssl)/bin`.strip %>:/usr/local/bin:$PATH
+export PATH=<%= `echo $(brew --prefix coreutils)/libexec/gnubin`.strip %>:<%= `echo $(brew --prefix findutils)/libexec/gnubin`.strip %>:<%= `echo $(brew --prefix diffutils)/bin`.strip %>:<%= `echo $(brew --prefix openssl)/bin`.strip %>:<%= `echo $(brew --prefix grep)/libexec/gnubin`.strip %>:/usr/local/bin:$PATH
