@@ -41,18 +41,23 @@ task :install do
   # brew
   sh <<~CMD
     [ -d /usr/local/Homebrew ] || /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
-    brew update
     brew analytics off
+    brew update
+    brew upgrade
   CMD
 
   # zsh
   sh 'brew install zsh'
   sh '[ -d ~/.oh-my-zsh ] || sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"'
-  sh 'grep -i $(brew --prefix zsh)/bin/zsh /etc/shells || echo $(brew --prefix zsh)/bin/zsh | sudo tee -a /etc/shells'
-  sh 'chsh -s $(which zsh) $USER'
+  sh <<~CMD
+  if ! grep -i -q $(brew --prefix zsh)/bin/zsh /etc/shells; then
+    echo $(brew --prefix zsh)/bin/zsh | sudo tee -a /etc/shells
+    chsh -s $(which zsh) $USER
+  fi
+  CMD
 
   # some packages
-  [
+  pkgs = [
     'rbenv',
     'goenv',
     'nodenv',
@@ -74,12 +79,11 @@ task :install do
     'postgresql@9.6',
     'postgresql@11', # latest version for cli
     'homebrew/cask-drivers/logitech-options',
-  ].each do |pkg|
-    sh "brew install #{pkg}"
-  end
+  ]
+  sh "brew install #{pkgs.join(' ')}"
 
   # more packages
-  [
+  pkgs = [
     'java8',
     'visual-studio-code-insiders',
     'dbeaver-community',
@@ -93,9 +97,8 @@ task :install do
     'sourcetree',
     'google-cloud-sdk',
     'vagrant',
-  ].each do |pkg|
-    sh "brew cask install #{pkg}"
-  end
+  ]
+  sh "brew cask install #{pkgs.join(' ')}"
 
   Rake::Task['langenv'].execute
   Rake::Task['configfiles'].execute

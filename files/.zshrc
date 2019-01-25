@@ -110,11 +110,12 @@ eval "$(nodenv init -)"
 export PATH=~/Library/Python/2.7/bin:$PATH
 
 # python virtualenv
-if [ -f /usr/local/bin/virtualenvwrapper.sh ]; then
-    export WORKON_HOME=~/.pyenv
-    export VIRTUALENVWRAPPER_PYTHON=$(which python3)
-    source /usr/local/bin/virtualenvwrapper.sh
-fi
+export WORKON_HOME=~/.pyenv
+export VIRTUALENVWRAPPER_PYTHON=$(which python3)
+source /usr/local/bin/virtualenvwrapper.sh
+
+# use pip3
+alias pip=pip3
 
 # load more configs
 for f in $(ls ~/.more/*_profile); do
