@@ -1,6 +1,8 @@
 local BASE_PGDATA=${HOME}/.pgdata
 local PGDATA_96="${BASE_PGDATA}/9.6"
+local PGDATA_11="${BASE_PGDATA}/11"
 local PGCTL_96="<%= `echo $(brew --prefix postgresql@9.6)`.strip %>/bin/pg_ctl"
+local PGCTL_11="<%= `echo $(brew --prefix postgresql@11)`.strip %>/bin/pg_ctl"
 local PSQL="<%= `echo $(brew --prefix postgresql@11)`.strip %>/bin/psql"
 
 function _pg96_init {
@@ -21,54 +23,87 @@ EOF
     grep -q "^${line}" "${conf}" || echo $line >> $conf
 }
 
-function _pg96_drop {
-    local out=$(ps ax | grep postgres | grep -v 'grep')
-    if [ "$out" != "" ]; then
-        echo "There's running postgres instance"
-        return 1
-    fi
-
-    rm -rf ${PGDATA_96}
-}
-
-function _pg96_start {
-    ${PGCTL_96} -D ${PGDATA_96} -l "${PGDATA_96}/logfile" start
-}
-
-function _pg96_stop {
-    ${PGCTL_96} -D ${PGDATA_96} stop
-    ps ax | grep postgres | grep -v 'grep'
-}
-
-function _pg96_status {
-    ${PGCTL_96} -D ${PGDATA_96} status
-    ps ax | grep postgres | grep -v 'grep'
-}
-
-function _pg96_log {
-    tail -f "${PGDATA_96}/logfile"
-}
-
-function pg96_helper {
+function pg96 {
     local cmd=$1
     case $cmd in
         init)
             _pg96_init
             ;;
         start)
-            _pg96_start
+            ${PGCTL_96} -D ${PGDATA_96} -l "${PGDATA_96}/logfile" start
             ;;
         stop)
-            _pg96_stop
+            ${PGCTL_96} -D ${PGDATA_96} stop
+            ps ax | grep "${PGDATA_96}" | grep -v 'grep'
             ;;
         drop)
-            _pg96_drop
+            local out=$(ps ax | grep "${PGDATA_96}" | grep -v 'grep')
+            if [ "$out" != "" ]; then
+                echo "There's running postgres instance"
+                return 1
+            fi
+
+            rm -rf ${PGDATA_96}
             ;;
         status)
-            _pg96_status
+            ${PGCTL_96} -D ${PGDATA_96} status
+            ps ax | grep "${PGDATA_96}" | grep -v 'grep'
             ;;
         log)
-            _pg96_log
+            tail -f "${PGDATA_96}/logfile"
+            ;;
+        *)
+            echo "Usage: $0 {init|start|stop|drop|status|log}"
+            return 1
+    esac
+}
+
+function _pg11_init {
+    local initdb_bin="<%= `echo $(brew --prefix postgresql@11)`.strip %>/bin/initdb"
+    ${initdb_bin} -D ${PGDATA_11} -U postgres
+
+    local more_conf="${BASE_PGDATA}/conf.d"
+    mkdir -p ${more_conf}
+
+    cat << EOF > "${more_conf}/me.conf"
+listen_addresses = '127.0.0.1'
+log_statement = 'all'
+log_line_prefix = '%m [%p] '
+EOF
+
+    local conf="${PGDATA_11}/postgresql.conf"
+    local line="include_dir = '${more_conf}'"
+    grep -q "^${line}" "${conf}" || echo $line >> $conf
+}
+
+function pg11 {
+    local cmd=$1
+    case $cmd in
+        init)
+            _pg11_init
+            ;;
+        start)
+            ${PGCTL_11} -D ${PGDATA_11} -l "${PGDATA_11}/logfile" start
+            ;;
+        stop)
+            ${PGCTL_11} -D ${PGDATA_11} stop
+            ps ax | grep "${PGDATA_11}" | grep -v 'grep'
+            ;;
+        drop)
+            local out=$(ps ax | grep "${PGDATA_11}" | grep -v 'grep')
+            if [ "$out" != "" ]; then
+                echo "There's running postgres instance"
+                return 1
+            fi
+
+            rm -rf ${PGDATA_11}
+            ;;
+        status)
+            ${PGCTL_11} -D ${PGDATA_11} status
+            ps ax | grep "${PGDATA_11}" | grep -v 'grep'
+            ;;
+        log)
+            tail -f "${PGDATA_11}/logfile"
             ;;
         *)
             echo "Usage: $0 {init|start|stop|drop|status|log}"

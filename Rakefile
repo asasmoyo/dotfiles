@@ -1,5 +1,6 @@
 require_relative 'lib.rb'
 
+desc 'Install configuration files'
 task :configfiles do
   [
     '.zshrc',
@@ -14,6 +15,7 @@ task :configfiles do
   render_tpl 'files/.gitconfig.erb', "#{ENV['HOME']}/.gitconfig"
 end
 
+desc 'Install and configures programming languages version'
 task :langenv do
   go_version = '1.11.4'
   ruby_version = '2.6.0'
@@ -34,6 +36,7 @@ task :langenv do
   sh '$(brew --prefix python3)/bin/pip3 install virtualenvwrapper'
 end
 
+desc 'Install dotfiles'
 task :install do
   # xcode
   sh 'xcode-select -p || xcode-select --install'
@@ -106,6 +109,7 @@ task :install do
   puts "Now you'll need to restart your shell"
 end
 
+desc 'Install work related dotfiles only'
 task :work do
   sh 'rm -f ~/.more/work_profile && cp ./files/work_profile ~/.more/'
 
