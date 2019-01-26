@@ -14,13 +14,19 @@ function _pg96_init {
 
     cat << EOF > "${more_conf}/me.conf"
 listen_addresses = '127.0.0.1'
-log_statement = 'all'
 log_line_prefix = '%m [%p] '
+log_statement = 'all'
+log_connections = true
+log_disconnections = true
 EOF
 
     local conf="${PGDATA_96}/postgresql.conf"
     local line="include_dir = '${more_conf}'"
     grep -q "^${line}" "${conf}" || echo $line >> $conf
+
+    ${PGCTL_96} -D ${PGDATA_96} -l "${PGDATA_96}/logfile" start
+    psql -U postgres -c "create role ${USER} with login superuser"
+    psql -U postgres -c "create database ${USER} with owner ${USER}"
 }
 
 function pg96 {
@@ -67,13 +73,19 @@ function _pg11_init {
 
     cat << EOF > "${more_conf}/me.conf"
 listen_addresses = '127.0.0.1'
-log_statement = 'all'
 log_line_prefix = '%m [%p] '
+log_statement = 'all'
+log_connections = true
+log_disconnections = true
 EOF
 
     local conf="${PGDATA_11}/postgresql.conf"
     local line="include_dir = '${more_conf}'"
     grep -q "^${line}" "${conf}" || echo $line >> $conf
+
+    ${PGCTL_11} -D ${PGDATA_11} -l "${PGDATA_11}/logfile" start
+    psql -U postgres -c "create role ${USER} with login superuser"
+    psql -U postgres -c "create database ${USER} with owner ${USER}"
 }
 
 function pg11 {
