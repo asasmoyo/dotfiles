@@ -14,8 +14,10 @@ task :configfiles do
   render_tpl 'files/gnu_profile.erb', "#{ENV['HOME']}/.more/gnu_profile"
   render_tpl 'files/.gitconfig.erb', "#{ENV['HOME']}/.gitconfig"
 
+  # nvim
   sh 'mkdir -p ~/.config/nvim'
-  sh 'rm -f ~/.config/nvim/init.vim && cp ./files/nvim.vim ~/.config/nvim/init.vim'
+  sh 'rm -f ~/.config/nvim/init.vim && cp ./files/bootstrap.vim ~/.config/nvim/init.vim'
+  sh 'rm -f ~/.config/nvim/local_init.vim && cp ./files/my.vim ~/.config/nvim/local_init.vim'
   sh '$(brew --prefix nvim)/bin/nvim +PlugInstall +qall'
 
   # vscode initial settings
