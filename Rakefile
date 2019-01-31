@@ -13,6 +13,10 @@ task :configfiles do
   render_tpl 'files/pg_profile.erb', "#{ENV['HOME']}/.more/pg_profile"
   render_tpl 'files/gnu_profile.erb', "#{ENV['HOME']}/.more/gnu_profile"
   render_tpl 'files/.gitconfig.erb', "#{ENV['HOME']}/.gitconfig"
+
+  sh 'mkdir -p ~/.config/nvim'
+  sh 'rm -f ~/.config/nvim/init.vim && cp ./files/nvim.vim ~/.config/nvim/init.vim'
+  sh '$(brew --prefix nvim)/bin/nvim +PlugInstall +qall'
 end
 
 desc 'Install and configures programming languages version'
