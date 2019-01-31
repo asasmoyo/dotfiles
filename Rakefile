@@ -17,6 +17,21 @@ task :configfiles do
   sh 'mkdir -p ~/.config/nvim'
   sh 'rm -f ~/.config/nvim/init.vim && cp ./files/nvim.vim ~/.config/nvim/init.vim'
   sh '$(brew --prefix nvim)/bin/nvim +PlugInstall +qall'
+
+  # vscode initial settings
+  require 'json'
+  vscode_settings_gist_id = '3248cc6252d7fdda40a46e29a7f11c86'
+  vscode_settings_path = File.expand_path('~/Library/Application Support/Code - Insiders/User/settings.json')
+  if File.file?(vscode_settings_path)
+    vscode_settings = JSON.parse(File.read(vscode_settings_path))
+    current_gist_id = vscode_settings['sync.gist']
+    if current_gist_id != vscode_settings_gist_id
+      vscode_settings['sync.gist'] = vscode_settings_gist_id
+      File.write(vscode_settings_path, JSON.pretty_generate(vscode_settings))
+    end
+  else
+    File.write(vscode_settings_path, JSON.pretty_generate({'sync.gist':vscode_settings_gist_id}))
+  end
 end
 
 desc 'Install and configures programming languages version'
