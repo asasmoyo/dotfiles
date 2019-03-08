@@ -103,13 +103,14 @@ task :install do
     'postgresql@9.6',
     'postgresql@11', # latest version for cli
     'homebrew/cask-drivers/logitech-options',
+    'elixir',
   ]
   sh "brew install #{pkgs.join(' ')}"
 
   # more packages
   pkgs = [
     'java8',
-    'visual-studio-code-insiders',
+    'visual-studio-code',
     'dbeaver-community',
     'sublime-text',
     'google-chrome',
