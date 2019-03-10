@@ -23,7 +23,7 @@ task :configfiles do
   # vscode initial settings
   require 'json'
   vscode_settings_gist_id = '3248cc6252d7fdda40a46e29a7f11c86'
-  vscode_settings_path = File.expand_path('~/Library/Application Support/Code - Insiders/User/settings.json')
+  vscode_settings_path = File.expand_path('~/Library/Application\ Support/Code/User/settings.json')
   if File.file?(vscode_settings_path)
     vscode_settings = JSON.parse(File.read(vscode_settings_path))
     current_gist_id = vscode_settings['sync.gist']
