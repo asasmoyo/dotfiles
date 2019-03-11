@@ -17,7 +17,8 @@ task :configfiles do
   # nvim
   sh 'mkdir -p ~/.config/nvim'
   sh 'rm -f ~/.config/nvim/init.vim && cp ./files/bootstrap.vim ~/.config/nvim/init.vim'
-  sh 'rm -f ~/.config/nvim/local_init.vim && cp ./files/my.vim ~/.config/nvim/local_init.vim'
+  sh 'rm -f ~/.config/nvim/local_init.vim && cp ./files/local_init.vim ~/.config/nvim/local_init.vim'
+  sh 'rm -f ~/.config/nvim/local_bundles.vim && cp ./files/local_bundles.vim ~/.config/nvim/local_bundles.vim'
   sh '$(brew --prefix nvim)/bin/nvim +PlugInstall +qall'
 
   # vscode initial settings
@@ -104,6 +105,8 @@ task :install do
     'postgresql@11', # latest version for cli
     'homebrew/cask-drivers/logitech-options',
     'elixir',
+    'the_silver_searcher',
+    'tmux',
   ]
   sh "brew install #{pkgs.join(' ')}"
 
