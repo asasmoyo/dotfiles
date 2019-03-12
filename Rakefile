@@ -21,6 +21,13 @@ task :configfiles do
   sh 'rm -f ~/.config/nvim/local_bundles.vim && cp ./files/local_bundles.vim ~/.config/nvim/local_bundles.vim'
   sh '$(brew --prefix nvim)/bin/nvim +PlugInstall +qall'
 
+  # tmux
+  sh <<~EOF
+    [ -d ~/.tmux/plugins/tpm ] && pushd ~/.tmux/plugins/tpm && git pull --rebase && popd
+    [ -d ~/.tmux/plugins/tpm ] || git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
+    rm -f ~/.tmux.conf && cp ./files/.tmux.conf ~/.tmux.conf
+  EOF
+
   # vscode initial settings
   require 'json'
   vscode_settings_gist_id = '3248cc6252d7fdda40a46e29a7f11c86'
