@@ -65,6 +65,52 @@ task :langenv do
   sh '$(brew --prefix python3)/bin/pip3 install virtualenvwrapper'
 end
 
+packages = [
+  'rbenv',
+  'goenv',
+  'nodenv',
+  'python3',
+  'coreutils',
+  'findutils',
+  'diffutils',
+  'wget',
+  'gzip',
+  'grep',
+  'bash',
+  'less',
+  'jq',
+  'make',
+  'tree',
+  'libsodium',
+  'nvim',
+  'openssl',
+  'postgresql@9.6',
+  'postgresql@11', # latest version for cli
+  'homebrew/cask-drivers/logitech-options',
+  'elixir',
+  'the_silver_searcher',
+  'tmux',
+]
+
+cask_packages = [
+  'java8',
+  'visual-studio-code',
+  'dbeaver-community',
+  'sublime-text',
+  'google-chrome',
+  'google-backup-and-sync',
+  'spectacle',
+  'iterm2',
+  'docker',
+  'tunnelblick',
+  'sourcetree',
+  'google-cloud-sdk',
+  'vagrant',
+]
+
+# these packages do not have pinned version so they are always asking to be updated
+cask_packages_to_update = cask_packages - ['google-backup-and-sync', 'google-cloud-sdk']
+
 desc 'Install dotfiles'
 task :install do
   # xcode
@@ -88,57 +134,19 @@ task :install do
   fi
   CMD
 
-  # some packages
-  pkgs = [
-    'rbenv',
-    'goenv',
-    'nodenv',
-    'python3',
-    'coreutils',
-    'findutils',
-    'diffutils',
-    'wget',
-    'gzip',
-    'grep',
-    'bash',
-    'less',
-    'jq',
-    'make',
-    'tree',
-    'libsodium',
-    'nvim',
-    'openssl',
-    'postgresql@9.6',
-    'postgresql@11', # latest version for cli
-    'homebrew/cask-drivers/logitech-options',
-    'elixir',
-    'the_silver_searcher',
-    'tmux',
-  ]
-  sh "brew install #{pkgs.join(' ')}"
-
-  # more packages
-  pkgs = [
-    'java8',
-    'visual-studio-code',
-    'dbeaver-community',
-    'sublime-text',
-    'google-chrome',
-    'google-backup-and-sync',
-    'spectacle',
-    'iterm2',
-    'docker',
-    'tunnelblick',
-    'sourcetree',
-    'google-cloud-sdk',
-    'vagrant',
-  ]
-  sh "brew cask install #{pkgs.join(' ')}"
+  sh "brew install #{packages.join(' ')}"
+  sh "brew cask install #{cask_packages.join(' ')}"
 
   Rake::Task['langenv'].execute
   Rake::Task['configfiles'].execute
 
   puts "Now you'll need to restart your shell"
+end
+
+desc 'Upgrade packages'
+task :upgrade do
+  sh "brew upgrade"
+  sh "brew cask upgrade --greedy #{cask_packages_to_update.join(' ')}"
 end
 
 desc 'Install work related dotfiles only'
