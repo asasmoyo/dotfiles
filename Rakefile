@@ -53,12 +53,16 @@ task :langenv do
   sh <<~CMD
     goenv install --keep --skip-existing --verbose #{go_version}
     goenv global #{go_version}
+    goenv rehash
 
     rbenv install --keep --skip-existing --verbose #{ruby_version}
     rbenv global #{ruby_version}
+    rbenv rehash
 
     nodenv install --keep --skip-existing --verbose #{node_version}
     nodenv global #{node_version}
+    npm install -g yarn
+    nodenv rehash
   CMD
 
   # python virtualenv
@@ -80,6 +84,7 @@ packages = [
   'less',
   'jq',
   'make',
+  'cmake',
   'tree',
   'libsodium',
   'nvim',
