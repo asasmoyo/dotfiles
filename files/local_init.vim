@@ -11,3 +11,6 @@ let g:ctrlp_show_hidden = 1
 set grepprg=ag\ --nogroup\ --nocolor
 let g:ctrlp_user_command = 'ag %s --files-with-matches --hidden --nocolor --skip-vcs-ignores --ignore-dir ".git" --filename-pattern ""'
 let g:ctrlp_use_caching = 0
+
+" ignore scp and fugitive
+let g:EditorConfig_exclude_patterns = ['fugitive://.*', 'scp://.*']
