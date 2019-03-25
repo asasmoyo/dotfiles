@@ -121,3 +121,6 @@ alias pip=pip3
 for f in $(ls ~/.more/*_profile); do
     source $f
 done
+
+# aliases
+alias cat="cat -n"
