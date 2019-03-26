@@ -88,6 +88,7 @@ packages = [
   'tree',
   'libsodium',
   'nvim',
+  'rsync',
   'openssl',
   'postgresql@9.6',
   'postgresql@11', # latest version for cli
