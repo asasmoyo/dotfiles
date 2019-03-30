@@ -47,8 +47,8 @@ end
 desc 'Install and configures programming languages version'
 task :langenv do
   go_version = '1.11.4'
-  ruby_version = '2.6.0'
-  node_version = '10.15.0'
+  ruby_version = '2.6.2'
+  node_version = '11.13.0'
 
   sh <<~CMD
     goenv install --keep --skip-existing --verbose #{go_version}
