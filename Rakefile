@@ -96,6 +96,7 @@ packages = [
   'elixir',
   'the_silver_searcher',
   'tmux',
+  'stubby',
 ]
 
 cask_packages = [
@@ -162,4 +163,11 @@ task :work do
   Rake::Task['langenv'].execute
   Rake::Task['configfiles'].execute
   puts "Now you'll need to restart your shell"
+end
+
+desc 'Setup dns over tls'
+task :dns do
+  render_tpl 'files/stubby.yml.erb', "/usr/local/etc/stubby/stubby.yml"
+  sh `sudo brew services start stubby`
+  puts "Set your dns to 127.0.0.1"
 end
