@@ -167,7 +167,47 @@ end
 
 desc 'Setup dns over tls'
 task :dns do
-  render_tpl 'files/stubby.yml.erb', "/usr/local/etc/stubby/stubby.yml"
-  sh `sudo brew services start stubby`
-  puts "Set your dns to 127.0.0.1"
+  version = '1.4.0'
+  dir = '/opt/coredns'
+  binary = "#{dir}/coredns"
+  config = "#{dir}/config"
+  binary_url = "https://github.com/coredns/coredns/releases/download/v#{version}/coredns_#{version}_darwin_amd64.tgz"
+
+  sh <<~EOF
+    sudo mkdir -p #{dir}
+    sudo chown root  #{dir}
+    sudo chmod 755 #{dir}
+
+    if [[ -f #{binary} ]]; then
+      if [[ $(#{binary} -version | grep #{version}) ]]; then
+        echo 'already installed'
+        exit 0
+      fi
+    fi
+
+    pushd /tmp
+      if [[ ! -f coredns_#{version}_darwin_amd64.tgz ]]; then
+        wget #{binary_url}
+      fi
+      if [[ ! -f coredns ]]; then
+        tar -xzvf coredns_#{version}_darwin_amd64.tgz
+      fi
+
+      sudo rm -f #{binary}
+      sudo mv coredns #{dir}
+      sudo chown root #{binary}
+      sudo chmod 755 #{binary}
+    popd
+
+    sudo rm -f #{config}
+    sudo cp files/coredns/config #{config}
+    sudo chown root #{config}
+    sudo chmod 755 #{config}
+    sudo cp files/coredns/io.coredns.coredns.plist /Library/LaunchDaemons
+
+    sudo rm -f /etc/newsyslog.d/coredns.conf
+    sudo cp files/coredns/coredns.conf /etc/newsyslog.d
+  EOF
+
+  puts "Now you need to set your dns to 127.0.0.1"
 end
