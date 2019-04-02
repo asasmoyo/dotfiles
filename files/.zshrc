@@ -106,9 +106,6 @@ eval "$(rbenv init -)"
 # node
 eval "$(nodenv init -)"
 
-# python --user binaries
-export PATH=~/Library/Python/2.7/bin:$PATH
-
 # python virtualenv
 export WORKON_HOME=~/.pyenv
 export VIRTUALENVWRAPPER_PYTHON=$(which python3)

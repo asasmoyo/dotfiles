@@ -1,0 +1,10 @@
+<%
+items = [
+  `echo $(brew --prefix python@2)/bin`.strip,
+  `echo ~/Library/Python/2.7/bin`.strip,
+  `echo $(brew --prefix python3)/bin`.strip,
+  `echo ~/Library/Python/3.7/bin`.strip
+]
+%>
+export PATH=<%= items.join(':') %>:$PATH
+

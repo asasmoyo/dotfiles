@@ -3,7 +3,7 @@
     tls_servername cloudflare-dns.com
     health_check 5s
   }
-  cache 600
+  cache 1800
   log
   errors
 }

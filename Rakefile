@@ -10,15 +10,16 @@ task :configfiles do
   end
 
   sh 'mkdir -p ~/.more'
-  render_tpl 'files/pg_profile.erb', "#{ENV['HOME']}/.more/pg_profile"
-  render_tpl 'files/gnu_profile.erb', "#{ENV['HOME']}/.more/gnu_profile"
+  render_tpl 'files/profiles/pg_profile.erb', "#{ENV['HOME']}/.more/pg_profile"
+  render_tpl 'files/profiles/gnu_profile.erb', "#{ENV['HOME']}/.more/gnu_profile"
+  render_tpl 'files/profiles/python_profile.erb', "#{ENV['HOME']}/.more/python_profile"
   render_tpl 'files/.gitconfig.erb', "#{ENV['HOME']}/.gitconfig"
 
   # nvim
   sh 'mkdir -p ~/.config/nvim'
-  sh 'rm -f ~/.config/nvim/init.vim && cp ./files/bootstrap.vim ~/.config/nvim/init.vim'
-  sh 'rm -f ~/.config/nvim/local_init.vim && cp ./files/local_init.vim ~/.config/nvim/local_init.vim'
-  sh 'rm -f ~/.config/nvim/local_bundles.vim && cp ./files/local_bundles.vim ~/.config/nvim/local_bundles.vim'
+  sh 'rm -f ~/.config/nvim/init.vim && cp ./files/vim/bootstrap.vim ~/.config/nvim/init.vim'
+  sh 'rm -f ~/.config/nvim/local_init.vim && cp ./files/vim/local_init.vim ~/.config/nvim/local_init.vim'
+  sh 'rm -f ~/.config/nvim/local_bundles.vim && cp ./files/vim/local_bundles.vim ~/.config/nvim/local_bundles.vim'
   sh '$(brew --prefix nvim)/bin/nvim +PlugInstall +qall'
 
   # tmux
@@ -73,7 +74,9 @@ packages = [
   'rbenv',
   'goenv',
   'nodenv',
+  'python@2',
   'python3',
+  'ctags',
   'coreutils',
   'findutils',
   'diffutils',
@@ -158,7 +161,7 @@ end
 
 desc 'Install work related dotfiles only'
 task :work do
-  sh 'rm -f ~/.more/work_profile && cp ./files/work_profile ~/.more/'
+  sh 'rm -f ~/.more/work_profile && cp ./files/work/work_profile ~/.more/'
 
   Rake::Task['langenv'].execute
   Rake::Task['configfiles'].execute

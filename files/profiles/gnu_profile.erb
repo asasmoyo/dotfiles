@@ -9,4 +9,4 @@ items = [
   `echo $(brew --prefix cmake)/bin`.strip
 ]
 %>
-export PATH=<%= items.join(':') %>:/usr/local/bin:$PATH
+export PATH=<%= items.join(':') %>:$PATH
