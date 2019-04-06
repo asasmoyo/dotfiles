@@ -17,8 +17,8 @@
       <string>/var/run/coredns.pid</string>
     </array>
     <key>StandardErrorPath</key>
-    <string>/var/log/coredns.err.log</string>
+    <string>/var/log/coredns.log</string>
     <key>StandardOutPath</key>
-    <string>/var/log/coredns.out.log</string>
+    <string>/var/log/coredns.log</string>
   </dict>
 </plist>

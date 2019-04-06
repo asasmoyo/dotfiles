@@ -177,39 +177,49 @@ task :dns do
   binary_url = "https://github.com/coredns/coredns/releases/download/v#{version}/coredns_#{version}_darwin_amd64.tgz"
 
   sh <<~EOF
+    set -o errexit
+    set -o nounset
+    set -o pipefail
+
+    function install_binary() {
+      pushd /tmp
+        if [[ ! -f coredns_#{version}_darwin_amd64.tgz ]]; then
+          wget #{binary_url}
+        fi
+        if [[ ! -f coredns ]]; then
+          tar -xzvf coredns_#{version}_darwin_amd64.tgz
+        fi
+
+        sudo rm -f #{binary}
+        sudo mv coredns #{dir}
+        sudo chown root #{binary}
+        sudo chmod 755 #{binary}
+      popd
+    }
+
     sudo mkdir -p #{dir}
     sudo chown root  #{dir}
     sudo chmod 755 #{dir}
 
-    if [[ -f #{binary} ]]; then
-      if [[ $(#{binary} -version | grep #{version}) ]]; then
-        echo 'already installed'
-        exit 0
-      fi
+    if [[ (! -f #{binary}) || (! $(#{binary} -version | grep #{version})) ]]; then
+      echo 'installing binary'
+      install_binary
     fi
 
-    pushd /tmp
-      if [[ ! -f coredns_#{version}_darwin_amd64.tgz ]]; then
-        wget #{binary_url}
-      fi
-      if [[ ! -f coredns ]]; then
-        tar -xzvf coredns_#{version}_darwin_amd64.tgz
-      fi
+    sudo launchctl unload /Library/LaunchDaemons/io.coredns.coredns.plist
+      sudo rm -f #{config}
+      sudo cp files/coredns/config #{config}
+      sudo chown root #{config}
+      sudo chmod 755 #{config}
 
-      sudo rm -f #{binary}
-      sudo mv coredns #{dir}
-      sudo chown root #{binary}
-      sudo chmod 755 #{binary}
-    popd
+      sudo rm -f /Library/LaunchDaemons/io.coredns.coredns.plist
+      sudo cp files/coredns/io.coredns.coredns.plist /Library/LaunchDaemons
 
-    sudo rm -f #{config}
-    sudo cp files/coredns/config #{config}
-    sudo chown root #{config}
-    sudo chmod 755 #{config}
-    sudo cp files/coredns/io.coredns.coredns.plist /Library/LaunchDaemons
+      sudo rm -f /etc/newsyslog.d/coredns.conf
+      sudo cp files/coredns/coredns.conf /etc/newsyslog.d
+    sudo launchctl load /Library/LaunchDaemons/io.coredns.coredns.plist
 
-    sudo rm -f /etc/newsyslog.d/coredns.conf
-    sudo cp files/coredns/coredns.conf /etc/newsyslog.d
+    #{binary} -version
   EOF
 
   puts "Now you need to set your dns to 127.0.0.1"
