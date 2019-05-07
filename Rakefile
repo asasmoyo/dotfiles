@@ -105,7 +105,6 @@ packages = [
 cask_packages = [
   'java8',
   'visual-studio-code',
-  'dbeaver-community',
   'sublime-text',
   'google-chrome',
   'google-backup-and-sync',
