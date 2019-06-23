@@ -97,7 +97,6 @@ packages = [
   'postgresql@9.6',
   'postgresql@11', # latest version for cli
   'homebrew/cask-drivers/logitech-options',
-  'elixir',
   'the_silver_searcher',
   'tmux',
   'stubby',
