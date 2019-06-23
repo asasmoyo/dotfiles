@@ -13,6 +13,7 @@ task :configfiles do
   render_tpl 'files/profiles/pg_profile.erb', "#{ENV['HOME']}/.more/pg_profile"
   render_tpl 'files/profiles/gnu_profile.erb', "#{ENV['HOME']}/.more/gnu_profile"
   render_tpl 'files/profiles/python_profile.erb', "#{ENV['HOME']}/.more/python_profile"
+  render_tpl 'files/profiles/libraries.erb', "#{ENV['HOME']}/.more/libraries_profile"
   render_tpl 'files/.gitconfig.erb', "#{ENV['HOME']}/.gitconfig"
 
   # nvim
@@ -118,7 +119,7 @@ cask_packages = [
 ]
 
 # these packages do not have pinned version so they are always asking to be updated
-cask_packages_to_update = cask_packages - ['google-backup-and-sync', 'google-cloud-sdk']
+cask_packages_to_update = cask_packages - ['google-backup-and-sync', 'google-cloud-sdk', 'visual-studio-code']
 
 desc 'Install dotfiles'
 task :install do
