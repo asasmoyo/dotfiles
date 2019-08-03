@@ -1,3 +1,5 @@
 export BOFT_LOGIN=arba
 export LC_ALL=en_US.UTF-8
 export LC_CTYPE=en_US.UTF-8
+unset LC_TERMINAL
+unset LC_TERMINAL_VERSION
