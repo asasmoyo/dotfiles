@@ -6,7 +6,8 @@ items = [
   `echo $(brew --prefix openssl)/bin`.strip,
   `echo $(brew --prefix grep)/libexec/gnubin`.strip,
   `echo $(brew --prefix make)/libexec/gnubin`.strip,
-  `echo $(brew --prefix cmake)/bin`.strip
+  `echo $(brew --prefix cmake)/bin`.strip,
+  `echo $(brew --prefix gnu-tar)/libexec/gnubin`.strip
 ]
 %>
 export PATH=<%= items.join(':') %>:$PATH
