@@ -14,7 +14,6 @@ task :configfiles do
   render_tpl 'files/profiles/gnu_profile.erb', "#{ENV['HOME']}/.more/gnu_profile"
   render_tpl 'files/profiles/python_profile.erb', "#{ENV['HOME']}/.more/python_profile"
   render_tpl 'files/profiles/libraries.erb', "#{ENV['HOME']}/.more/libraries_profile"
-  render_tpl 'files/.gitconfig.erb', "#{ENV['HOME']}/.gitconfig"
 
   # nvim
   sh 'mkdir -p ~/.config/nvim'
@@ -158,9 +157,15 @@ task :upgrade do
   sh "brew cask upgrade --greedy #{cask_packages_to_update.join(' ')}"
 end
 
+desc 'Install personal related dotfiles only'
+task :me do
+  render_tpl 'files/.gitconfig.erb', "#{ENV['HOME']}/.gitconfig"
+end
+
 desc 'Install work related dotfiles only'
 task :work do
   sh 'rm -f ~/.more/work_profile && cp ./files/work/work_profile ~/.more/'
+  render_tpl 'files/work/.gitconfig.erb', "#{ENV['HOME']}/.gitconfig"
 
   Rake::Task['langenv'].execute
   Rake::Task['configfiles'].execute
