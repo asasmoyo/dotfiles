@@ -118,3 +118,6 @@ alias pip=pip3
 for f in $(ls ~/.more/*_profile); do
     source $f
 done
+
+# do not use krypton for ssh
+export KR_SKIP_SSH_CONFIG=1
