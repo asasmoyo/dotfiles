@@ -102,7 +102,8 @@ packages = [
 ]
 
 cask_packages = [
-  'java8',
+  'macs-fan-control',
+  'java',
   'visual-studio-code',
   'sublime-text',
   'google-chrome',
