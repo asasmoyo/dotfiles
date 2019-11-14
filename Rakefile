@@ -71,8 +71,10 @@ task :langenv do
 end
 
 packages = [
+  'packer',
+  'shellcheck',
+  'terraform',
   'rbenv',
-  'goenv',
   'nodenv',
   'python@2',
   'python3',
@@ -95,10 +97,15 @@ packages = [
   'openssl',
   'postgresql@9.6',
   'postgresql@11', # latest version for cli
+  'redis',
   'homebrew/cask-drivers/logitech-options',
   'the_silver_searcher',
   'tmux',
-  'stubby',
+]
+
+# packages to be installed on HEAD
+head_packages = [
+  'goenv'
 ]
 
 cask_packages = [
@@ -115,6 +122,7 @@ cask_packages = [
   'sourcetree',
   'google-cloud-sdk',
   'vagrant',
+  'virtualbox',
 ]
 
 # these packages do not have pinned version so they are always asking to be updated
@@ -144,6 +152,7 @@ task :install do
   CMD
 
   sh "brew install #{packages.join(' ')}"
+  sh "brew install --HEAD #{head_packages.join(' ')}"
   sh "brew cask install #{cask_packages.join(' ')}"
 
   Rake::Task['langenv'].execute

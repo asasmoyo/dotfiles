@@ -96,6 +96,9 @@ alias vim=nvim
 alias vi=nvim
 export EDITOR='vim'
 
+# redis
+export PATH=/usr/local/opt/redis/bin:$PATH
+
 # go
 eval "$(goenv init -)"
 export PATH=~/go/bin:$PATH
