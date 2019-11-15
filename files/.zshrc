@@ -100,6 +100,7 @@ export EDITOR='vim'
 export PATH=/usr/local/opt/redis/bin:$PATH
 
 # go
+export GOENV_DISABLE_GOPATH=1
 eval "$(goenv init -)"
 export PATH=~/go/bin:$PATH
 
