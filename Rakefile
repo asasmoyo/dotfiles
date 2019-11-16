@@ -122,7 +122,7 @@ cask_packages = [
   'sourcetree',
   'google-cloud-sdk',
   'vagrant',
-  'virtualbox',
+  'spotify',
 ]
 
 # these packages do not have pinned version so they are always asking to be updated
@@ -154,6 +154,9 @@ task :install do
   sh "brew install #{packages.join(' ')}"
   sh "brew install --HEAD #{head_packages.join(' ')}"
   sh "brew cask install #{cask_packages.join(' ')}"
+
+  # latest virtualbox doesn't work with vagrant
+  sh 'brew cask install https://raw.githubusercontent.com/Homebrew/homebrew-cask/e7426e2dbc67958d8b68920464ec1c8507d30a2f/Casks/virtualbox.rb'
 
   Rake::Task['langenv'].execute
   Rake::Task['configfiles'].execute
