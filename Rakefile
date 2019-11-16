@@ -126,7 +126,7 @@ cask_packages = [
 ]
 
 # these packages do not have pinned version so they are always asking to be updated
-cask_packages_to_update = cask_packages - ['google-backup-and-sync', 'google-cloud-sdk', 'visual-studio-code']
+cask_packages_to_update = cask_packages - ['google-backup-and-sync', 'google-cloud-sdk', 'visual-studio-code', 'spotify']
 
 desc 'Install dotfiles'
 task :install do
