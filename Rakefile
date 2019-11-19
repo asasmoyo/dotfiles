@@ -109,7 +109,6 @@ head_packages = [
 ]
 
 cask_packages = [
-  'macs-fan-control',
   'java',
   'visual-studio-code',
   'sublime-text',
