@@ -74,6 +74,7 @@ packages = [
   'packer',
   'shellcheck',
   'terraform',
+  'tflint',
   'rbenv',
   'nodenv',
   'python@2',
@@ -101,6 +102,7 @@ packages = [
   'homebrew/cask-drivers/logitech-options',
   'the_silver_searcher',
   'tmux',
+  's3cmd',
 ]
 
 # packages to be installed on HEAD
