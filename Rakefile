@@ -114,7 +114,6 @@ cask_packages = [
   'java',
   'visual-studio-code',
   'sublime-text',
-  'google-chrome',
   'google-backup-and-sync',
   'spectacle',
   'iterm2',
