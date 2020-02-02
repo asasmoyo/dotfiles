@@ -47,8 +47,8 @@ end
 
 desc 'Install and configures programming languages version'
 task :langenv do
-  go_version = '1.11.4'
-  ruby_version = '2.6.2'
+  go_version = '1.13.4'
+  ruby_version = '2.7.0'
   node_version = '11.13.0'
 
   sh <<~CMD
