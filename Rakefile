@@ -103,6 +103,7 @@ packages = [
   'the_silver_searcher',
   'tmux',
   's3cmd',
+  'plantuml',
 ]
 
 # packages to be installed on HEAD
@@ -168,7 +169,9 @@ end
 desc 'Upgrade packages'
 task :upgrade do
   sh "brew upgrade"
+  sh "brew upgrade --fetch-HEAD #{head_packages.join(' ')}"
   sh "brew cask upgrade --greedy #{cask_packages_to_update.join(' ')}"
+  sh 'brew cask upgrade'
 end
 
 desc 'Install personal related dotfiles only'
