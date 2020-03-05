@@ -123,5 +123,7 @@ for f in $(ls ~/.more/*_profile); do
     source $f
 done
 
-# do not use krypton for ssh
-export KR_SKIP_SSH_CONFIG=1
+# google cloud sdk
+source '/usr/local/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/path.zsh.inc'
+source '/usr/local/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/completion.zsh.inc'
+
