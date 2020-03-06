@@ -104,6 +104,7 @@ packages = [
   'tmux',
   's3cmd',
   'plantuml',
+  'direnv',
 ]
 
 # packages to be installed on HEAD

@@ -33,3 +33,4 @@ Temporary Items
 .go-version
 .ruby-version
 .node-version
+.envrc
