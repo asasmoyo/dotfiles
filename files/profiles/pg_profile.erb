@@ -1,9 +1,9 @@
 local BASE_PGDATA=${HOME}/.pgdata
 local PGDATA_96="${BASE_PGDATA}/9.6"
-local PGDATA_11="${BASE_PGDATA}/11"
+local PGDATA_latest="${BASE_PGDATA}/latest"
 local PGCTL_96="<%= `echo $(brew --prefix postgresql@9.6)`.strip %>/bin/pg_ctl"
-local PGCTL_11="<%= `echo $(brew --prefix postgresql@11)`.strip %>/bin/pg_ctl"
-local PSQL="<%= `echo $(brew --prefix postgresql@11)`.strip %>/bin/psql"
+local PGCTL_latest="<%= `echo $(brew --prefix postgresql)`.strip %>/bin/pg_ctl"
+local PSQL="<%= `echo $(brew --prefix postgresql)`.strip %>/bin/psql"
 
 function _pg96_init {
     local initdb_bin="<%= `echo $(brew --prefix postgresql@9.6)`.strip %>/bin/initdb"
@@ -64,9 +64,9 @@ function pg96 {
     esac
 }
 
-function _pg11_init {
-    local initdb_bin="<%= `echo $(brew --prefix postgresql@11)`.strip %>/bin/initdb"
-    ${initdb_bin} -D ${PGDATA_11} -U postgres
+function _pg_init {
+    local initdb_bin="<%= `echo $(brew --prefix postgresql)`.strip %>/bin/initdb"
+    ${initdb_bin} -D ${PGDATA_latest} -U postgres
 
     local more_conf="${BASE_PGDATA}/conf.d"
     mkdir -p ${more_conf}
@@ -79,43 +79,43 @@ log_connections = true
 log_disconnections = true
 EOF
 
-    local conf="${PGDATA_11}/postgresql.conf"
+    local conf="${PGDATA_latest}/postgresql.conf"
     local line="include_dir = '${more_conf}'"
     grep -q "^${line}" "${conf}" || echo $line >> $conf
 
-    ${PGCTL_11} -D ${PGDATA_11} -l "${PGDATA_11}/logfile" start
+    ${PGCTL_latest} -D ${PGDATA_latest} -l "${PGDATA_latest}/logfile" start
     psql -U postgres -c "create role ${USER} with login superuser"
     psql -U postgres -c "create database ${USER} with owner ${USER}"
 }
 
-function pg11 {
+function pg {
     local cmd=$1
     case $cmd in
         init)
-            _pg11_init
+            _pg_init
             ;;
         start)
-            ${PGCTL_11} -D ${PGDATA_11} -l "${PGDATA_11}/logfile" start
+            ${PGCTL_latest} -D ${PGDATA_latest} -l "${PGDATA_latest}/logfile" start
             ;;
         stop)
-            ${PGCTL_11} -D ${PGDATA_11} stop
-            ps ax | grep "${PGDATA_11}" | grep -v 'grep'
+            ${PGCTL_latest} -D ${PGDATA_latest} stop
+            ps ax | grep "${PGDATA_latest}" | grep -v 'grep'
             ;;
         drop)
-            local out=$(ps ax | grep "${PGDATA_11}" | grep -v 'grep')
+            local out=$(ps ax | grep "${PGDATA_latest}" | grep -v 'grep')
             if [ "$out" != "" ]; then
                 echo "There's running postgres instance"
                 return 1
             fi
 
-            rm -rf ${PGDATA_11}
+            rm -rf ${PGDATA_latest}
             ;;
         status)
-            ${PGCTL_11} -D ${PGDATA_11} status
-            ps ax | grep "${PGDATA_11}" | grep -v 'grep'
+            ${PGCTL_latest} -D ${PGDATA_latest} status
+            ps ax | grep "${PGDATA_latest}" | grep -v 'grep'
             ;;
         log)
-            tail -f "${PGDATA_11}/logfile"
+            tail -f "${PGDATA_latest}/logfile"
             ;;
         *)
             echo "Usage: $0 {init|start|stop|drop|status|log}"

@@ -97,7 +97,7 @@ packages = [
   'rsync',
   'openssl',
   'postgresql@9.6',
-  'postgresql@11', # latest version for cli
+  'postgresql', # latest version for cli
   'redis',
   'homebrew/cask-drivers/logitech-options',
   'the_silver_searcher',
