@@ -105,6 +105,7 @@ packages = [
   's3cmd',
   'plantuml',
   'direnv',
+  'php',
 ]
 
 # packages to be installed on HEAD
@@ -125,6 +126,8 @@ cask_packages = [
   'google-cloud-sdk',
   'vagrant',
   'spotify',
+  'bitbar',
+  'smcfancontrol', # needed for bitbar
 ]
 
 # these packages do not have pinned version so they are always asking to be updated
@@ -244,4 +247,18 @@ task :dns do
   EOF
 
   puts "Now you need to set your dns to 127.0.0.1"
+end
+
+desc 'Setup bitbar plugins'
+task :bitbar do
+  sh <<~EOF
+    mkdir ~/.bitbar
+    cd ~/.bitbar
+    rm -f *
+
+    wget https://raw.githubusercontent.com/matryer/bitbar-plugins/master/System/cpu-temperature.5s.sh
+    wget https://raw.githubusercontent.com/matryer/bitbar-plugins/master/System/fan-speed.5s.sh
+
+    chmod +x *
+  EOF
 end
