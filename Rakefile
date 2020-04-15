@@ -256,7 +256,7 @@ task :bitbar do
     cd ~/.bitbar
     rm -f *
 
-    wget https://raw.githubusercontent.com/matryer/bitbar-plugins/master/System/cpu-temperature.5s.sh
+    wget https://raw.githubusercontent.com/matryer/bitbar-plugins/master/System/mtop.5s.sh
     wget https://raw.githubusercontent.com/matryer/bitbar-plugins/master/System/fan-speed.5s.sh
 
     chmod +x *
