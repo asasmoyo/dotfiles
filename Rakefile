@@ -106,6 +106,7 @@ packages = [
   'plantuml',
   'direnv',
   'php',
+  'ifstat',
 ]
 
 # packages to be installed on HEAD
@@ -252,11 +253,12 @@ end
 desc 'Setup bitbar plugins'
 task :bitbar do
   sh <<~EOF
-    mkdir ~/.bitbar
+    mkdir -p ~/.bitbar
     cd ~/.bitbar
     rm -f *
 
     wget https://raw.githubusercontent.com/matryer/bitbar-plugins/master/System/mtop.5s.sh
+    wget https://raw.githubusercontent.com/matryer/bitbar-plugins/master/Network/bandwidth_primary.1s.sh
     wget https://raw.githubusercontent.com/matryer/bitbar-plugins/master/System/fan-speed.5s.sh
 
     chmod +x *
