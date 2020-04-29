@@ -96,6 +96,9 @@ alias vim=nvim
 alias vi=nvim
 export EDITOR='vim'
 
+# moar files
+ulimit -S -n 50000
+
 # redis
 export PATH=/usr/local/opt/redis/bin:$PATH
 
