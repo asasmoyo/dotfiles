@@ -5,6 +5,7 @@ task :configfiles do
   [
     '.zshrc',
     '.global_gitignore',
+    '.terraformrc',
   ].each do |file|
     sh "rm -f ~/#{file} && cp ./files/#{file} ~/"
   end
