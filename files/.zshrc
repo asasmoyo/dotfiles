@@ -96,16 +96,15 @@ alias vim=nvim
 alias vi=nvim
 export EDITOR='vim'
 
-# moar files
-ulimit -S -n 50000
-
 # redis
 export PATH=/usr/local/opt/redis/bin:$PATH
 
 # go
 export GOENV_DISABLE_GOPATH=1
 eval "$(goenv init -)"
-export PATH=~/go/bin:$PATH
+export GO111MODULE=on
+export GOPATH=~/go
+export PATH=$GOPATH/bin:$PATH
 
 # ruby
 eval "$(rbenv init -)"

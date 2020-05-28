@@ -1,8 +1,0 @@
-. {
-  forward . tls://1.1.1.1 tls://1.0.0.1 {
-    tls_servername cloudflare-dns.com
-    health_check 60s
-  }
-  cache 300
-  errors
-}

@@ -132,6 +132,8 @@ cask_packages = [
   'smcfancontrol', # needed for bitbar
 ]
 
+ruby_tools = ['rubocop', 'rufo', 'rcodetools']
+
 # these packages do not have pinned version so they are always asking to be updated
 cask_packages_to_update = cask_packages - ['google-backup-and-sync', 'google-cloud-sdk', 'visual-studio-code', 'spotify']
 
@@ -168,6 +170,8 @@ task :install do
   Rake::Task['langenv'].execute
   Rake::Task['configfiles'].execute
 
+  sh "gem install --bindir ~/.bin #{ruby_tools.join(' ')}"
+
   puts "Now you'll need to restart your shell"
 end
 
@@ -177,6 +181,8 @@ task :upgrade do
   sh "brew upgrade --fetch-HEAD #{head_packages.join(' ')}"
   sh "brew cask upgrade --greedy #{cask_packages_to_update.join(' ')}"
   sh 'brew cask upgrade'
+
+  sh "gem update --bindir ~/.bin #{ruby_tools.join(' ')}"
 end
 
 desc 'Install personal related dotfiles only'
@@ -194,63 +200,6 @@ task :work do
   puts "Now you'll need to restart your shell"
 end
 
-desc 'Setup dns over tls'
-task :dns do
-  version = '1.4.0'
-  dir = '/opt/coredns'
-  binary = "#{dir}/coredns"
-  config = "#{dir}/config"
-  binary_url = "https://github.com/coredns/coredns/releases/download/v#{version}/coredns_#{version}_darwin_amd64.tgz"
-
-  sh <<~EOF
-    set -o errexit
-    set -o nounset
-    set -o pipefail
-
-    function install_binary() {
-      pushd /tmp
-        if [[ ! -f coredns_#{version}_darwin_amd64.tgz ]]; then
-          wget #{binary_url}
-        fi
-        if [[ ! -f coredns ]]; then
-          tar -xzvf coredns_#{version}_darwin_amd64.tgz
-        fi
-
-        sudo rm -f #{binary}
-        sudo mv coredns #{dir}
-        sudo chown root #{binary}
-        sudo chmod 755 #{binary}
-      popd
-    }
-
-    sudo mkdir -p #{dir}
-    sudo chown root  #{dir}
-    sudo chmod 755 #{dir}
-
-    if [[ (! -f #{binary}) || (! $(#{binary} -version | grep #{version})) ]]; then
-      echo 'installing binary'
-      install_binary
-    fi
-
-    sudo launchctl unload /Library/LaunchDaemons/io.coredns.coredns.plist
-      sudo rm -f #{config}
-      sudo cp files/coredns/config #{config}
-      sudo chown root #{config}
-      sudo chmod 755 #{config}
-
-      sudo rm -f /Library/LaunchDaemons/io.coredns.coredns.plist
-      sudo cp files/coredns/io.coredns.coredns.plist /Library/LaunchDaemons
-
-      sudo rm -f /etc/newsyslog.d/coredns.conf
-      sudo cp files/coredns/coredns.conf /etc/newsyslog.d
-    sudo launchctl load /Library/LaunchDaemons/io.coredns.coredns.plist
-
-    #{binary} -version
-  EOF
-
-  puts "Now you need to set your dns to 127.0.0.1"
-end
-
 desc 'Setup bitbar plugins'
 task :bitbar do
   sh <<~EOF
@@ -263,5 +212,16 @@ task :bitbar do
     wget https://raw.githubusercontent.com/matryer/bitbar-plugins/master/System/fan-speed.5s.sh
 
     chmod +x *
+  EOF
+end
+
+desc 'Sysctl tweak'
+task :sysctl do
+  sh <<~EOF
+    sudo rm -f /Library/LaunchDaemons/limit.maxfiles.plist && sudo cp ./files/limit.maxfiles.plist /Library/LaunchDaemons/limit.maxfiles.plist
+    sudo launchctl load /Library/LaunchDaemons/limit.maxfiles.plist
+
+    sudo rm -f /Library/LaunchDaemons/limit.maxproc.plist && sudo cp ./files/limit.maxproc.plist /Library/LaunchDaemons/limit.maxproc.plist
+    sudo launchctl load /Library/LaunchDaemons/limit.maxproc.plist
   EOF
 end
