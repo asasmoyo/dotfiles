@@ -108,6 +108,7 @@ packages = [
   'direnv',
   'php',
   'ifstat',
+  'gnu-sed',
 ]
 
 # packages to be installed on HEAD
@@ -132,7 +133,7 @@ cask_packages = [
   'smcfancontrol', # needed for bitbar
 ]
 
-ruby_tools = ['rubocop', 'rufo', 'rcodetools']
+ruby_tools = ['rubocop', 'rufo', 'rcodetools', 'solargraph']
 
 # these packages do not have pinned version so they are always asking to be updated
 cask_packages_to_update = cask_packages - ['google-backup-and-sync', 'google-cloud-sdk', 'visual-studio-code', 'spotify']

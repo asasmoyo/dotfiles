@@ -117,8 +117,9 @@ export WORKON_HOME=~/.pyenv
 export VIRTUALENVWRAPPER_PYTHON=$(which python3)
 source /usr/local/bin/virtualenvwrapper.sh
 
-# use pip3
+# use pip3 and python3
 alias pip=pip3
+alias python=python3
 
 # load more configs
 for f in $(ls ~/.more/*_profile); do
