@@ -1,8 +1,0 @@
-<%
-items = [
-  `echo $(brew --prefix python3)/bin`.strip,
-  `echo $(python3 -m site --user-site)/bin`.strip,
-]
-%>
-export PATH=<%= items.join(':') %>:$PATH
-

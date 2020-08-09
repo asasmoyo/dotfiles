@@ -1,6 +1,0 @@
-<%
-items = [
-  `echo $(brew --prefix libxml2)/lib/pkgconfig`.strip,
-]
-%>
-export PKG_CONFIG_PATH="<%= items.join(':') %>"
