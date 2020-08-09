@@ -29,7 +29,7 @@ brew install --HEAD goenv
 
 echo
 echo '==> Install brew cask packages'
-brew cask install java visual-studio-code sublime-text google-backup-and-sync spectacle iterm2 docker tunnelblick sourcetree google-cloud-sdk vagrant spotify bitbar smcfancontrol slack bitbar scroll-reverser bitwarden
+brew cask install java visual-studio-code sublime-text google-backup-and-sync spectacle iterm2 docker tunnelblick sourcetree google-cloud-sdk vagrant spotify bitbar smcfancontrol slack bitbar scroll-reverser bitwarden virtualbox virtualbox-extension-pack
 
 echo
 echo '==> Tweak sysctl stuff'
