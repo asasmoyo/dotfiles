@@ -23,4 +23,4 @@ unset LC_TERMINAL_VERSION
 EOF
 
 echo '==> Install some tools'
-pip freeze | grep chkcrontab || python -m pip install chkcrontab
+pip3 freeze | grep chkcrontab || pip3 install chkcrontab

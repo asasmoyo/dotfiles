@@ -94,8 +94,19 @@ cat <<'BASH' > ~/.dotfiles/node.sh
 eval "$(nodenv init -)"
 BASH
 
+echo '==> Configure python'
+cat <<EOF > ~/.dotfiles/python.sh
+export PATH=$(brew --prefix python@3)/bin:\$PATH
+export PATH=$(readlink -f $(python3 -m site --user-site)/../../../bin):\$PATH
+
+alias python=python3
+alias pip=pip3
+EOF
+
 echo
 echo '==> Configure vscode'
+mkdir -p ~/Library/Application\ Support/Code
+mkdir -p ~/Library/Application\ Support/Code/User
 [ -f ~/Library/Application\ Support/Code/User/settings.json ] || cp files/vscode-settings.json ~/Library/Application\ Support/Code/User/settings.json
 
 echo
