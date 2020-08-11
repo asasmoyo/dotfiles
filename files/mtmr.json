@@ -1,0 +1,54 @@
+[
+  {
+    "type": "illuminationDown",
+    "width": 32,
+    "bordered": false,
+    "align": "right"
+  },
+  {
+    "type": "illuminationUp",
+    "width": 32,
+    "bordered": false,
+    "align": "right"
+  },
+  {
+    "type": "brightnessDown",
+    "width": 32,
+    "bordered": false,
+    "align": "right"
+  },
+  {
+    "type": "brightnessUp",
+    "width": 32,
+    "bordered": false,
+    "align": "right"
+  },
+  {
+    "type": "volumeDown",
+    "bordered": false,
+    "align": "right",
+    "width": 28
+  },
+  {
+    "type": "volumeUp",
+    "bordered": false,
+    "align": "right",
+    "width": 28
+  },
+  {
+    "type": "battery",
+    "align": "right",
+    "bordered": false
+  },
+  {
+    "type": "timeButton",
+    "formatTemplate": "HH:mm",
+    "align": "right",
+    "bordered": false,
+    "longAction": "shellScript",
+    "longExecutablePath": "/usr/bin/pmset",
+    "longShellArguments": [
+      "sleepnow"
+    ]
+  }
+]

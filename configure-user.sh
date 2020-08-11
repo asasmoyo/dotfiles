@@ -123,3 +123,7 @@ pushd ~/.dotfiles/bitbar
   wget https://raw.githubusercontent.com/matryer/bitbar-plugins/master/Network/bandwidth_primary.1s.sh
   chmod +x *
 popd
+
+echo
+echo 'Configure MTMR'
+rm -f ~/Library/Application\ Support/MTMR/items.json || cp files/mtmr.json ~/Library/Application\ Support/MTMR/items.json
