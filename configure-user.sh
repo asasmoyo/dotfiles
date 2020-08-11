@@ -94,6 +94,7 @@ cat <<'BASH' > ~/.dotfiles/node.sh
 eval "$(nodenv init -)"
 BASH
 
+echo
 echo '==> Configure python'
 cat <<EOF > ~/.dotfiles/python.sh
 export PATH=$(brew --prefix python@3)/bin:\$PATH
@@ -101,6 +102,12 @@ export PATH=$(readlink -f $(python3 -m site --user-site)/../../../bin):\$PATH
 
 alias python=python3
 alias pip=pip3
+EOF
+
+echo
+echo '==> Configure direnv'
+cat <<'EOF' > ~/.dotfiles/direnv.sh
+eval "$(direnv hook zsh)"
 EOF
 
 echo
@@ -126,4 +133,4 @@ popd
 
 echo
 echo 'Configure MTMR'
-rm -f ~/Library/Application\ Support/MTMR/items.json || cp files/mtmr.json ~/Library/Application\ Support/MTMR/items.json
+rm -f ~/Library/Application\ Support/MTMR/items.json && cp files/mtmr.json ~/Library/Application\ Support/MTMR/items.json
