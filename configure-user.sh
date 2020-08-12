@@ -26,6 +26,10 @@ cat <<EOF > ~/.gitconfig
     default = current
 [feature]
     manyFiles = true
+
+# needed by go module to fetch private repositories
+[url "ssh://git@github.com/"]
+    insteadOf = https://github.com/
 EOF
 
 echo
