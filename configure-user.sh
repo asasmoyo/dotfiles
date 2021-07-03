@@ -55,13 +55,15 @@ temp=\$temp:$(brew --prefix gnu-tar)/libexec/gnubin
 temp=\$temp:$(brew --prefix gnu-sed)/libexec/gnubin
 temp=\$temp:$(brew --prefix gettext)/bin
 
+# postgres
+temp=\$temp:$(brew --prefix postgresql)/bin
+
 # more stuff
 temp=\$temp:$(brew --prefix php)/bin
+temp=\$temp:$(brew --prefix salt)/bin
+temp=\$temp:/usr/local/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/bin
 
-# postgres
-temp=\$temp:$(brew --prefix postgresql@12)/bin
-
-export PATH=\$temp:\$PATH
+export PATH=/usr/local/sbin:\$temp:\$PATH
 export PKG_CONFIG_PATH=$(brew --prefix libxml2)/lib/pkgconfig
 BASH
 
@@ -71,11 +73,9 @@ goenv install --keep --skip-existing --verbose ${GO_VERSION}
 goenv global ${GO_VERSION}
 goenv rehash
 cat <<'BASH' > ~/.dotfiles/go.sh
-export GOENV_DISABLE_GOPATH=1
 eval "$(goenv init -)"
 
 export GO111MODULE=on
-export GOPATH=~/go
 export PATH=$GOPATH/bin:$PATH
 BASH
 
